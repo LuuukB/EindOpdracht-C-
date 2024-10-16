@@ -1,30 +1,11 @@
 {
   "version": 3,
   "targets": {
-    "net8.0": {
-      "UtilityLibrary/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v8.0",
-        "compile": {
-          "bin/placeholder/UtilityLibrary.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/UtilityLibrary.dll": {}
-        }
-      }
-    }
+    "net8.0": {}
   },
-  "libraries": {
-    "UtilityLibrary/1.0.0": {
-      "type": "project",
-      "path": "../UtilityLibrary/UtilityLibrary.csproj",
-      "msbuildProject": "../UtilityLibrary/UtilityLibrary.csproj"
-    }
-  },
+  "libraries": {},
   "projectFileDependencyGroups": {
-    "net8.0": [
-      "UtilityLibrary >= 1.0.0"
-    ]
+    "net8.0": []
   },
   "packageFolders": {
     "C:\\Users\\rikva\\.nuget\\packages\\": {},
@@ -33,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\rikva\\Documents\\GitKraken codes\\EindOpdracht-C-\\EindOpdracht Csharp\\Server\\Server.csproj",
-      "projectName": "Server",
-      "projectPath": "C:\\Users\\rikva\\Documents\\GitKraken codes\\EindOpdracht-C-\\EindOpdracht Csharp\\Server\\Server.csproj",
+      "projectUniqueName": "C:\\Users\\rikva\\Documents\\GitKraken codes\\EindOpdracht-C-\\EindOpdracht Csharp\\UtilityLibrary\\UtilityLibrary.csproj",
+      "projectName": "UtilityLibrary",
+      "projectPath": "C:\\Users\\rikva\\Documents\\GitKraken codes\\EindOpdracht-C-\\EindOpdracht Csharp\\UtilityLibrary\\UtilityLibrary.csproj",
       "packagesPath": "C:\\Users\\rikva\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\rikva\\Documents\\GitKraken codes\\EindOpdracht-C-\\EindOpdracht Csharp\\Server\\obj\\",
+      "outputPath": "C:\\Users\\rikva\\Documents\\GitKraken codes\\EindOpdracht-C-\\EindOpdracht Csharp\\UtilityLibrary\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -58,11 +39,7 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
-          "projectReferences": {
-            "C:\\Users\\rikva\\Documents\\GitKraken codes\\EindOpdracht-C-\\EindOpdracht Csharp\\UtilityLibrary\\UtilityLibrary.csproj": {
-              "projectPath": "C:\\Users\\rikva\\Documents\\GitKraken codes\\EindOpdracht-C-\\EindOpdracht Csharp\\UtilityLibrary\\UtilityLibrary.csproj"
-            }
-          }
+          "projectReferences": {}
         }
       },
       "warningProperties": {

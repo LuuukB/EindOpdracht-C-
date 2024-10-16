@@ -1,37 +1,68 @@
 {
   "version": 3,
   "targets": {
-    "net8.0-windows7.0": {}
+    "net8.0-windows7.0": {
+      "UtilityLibrary/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "compile": {
+          "bin/placeholder/UtilityLibrary.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/UtilityLibrary.dll": {}
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "UtilityLibrary/1.0.0": {
+      "type": "project",
+      "path": "../../UtilityLibrary/UtilityLibrary.csproj",
+      "msbuildProject": "../../UtilityLibrary/UtilityLibrary.csproj"
+    }
+  },
   "projectFileDependencyGroups": {
-    "net8.0-windows7.0": []
+    "net8.0-windows7.0": [
+      "UtilityLibrary >= 1.0.0"
+    ]
   },
   "packageFolders": {
-    "C:\\Users\\luukb\\.nuget\\packages\\": {}
+    "C:\\Users\\rikva\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\luukb\\OneDrive\\Documenten\\school\\gitKraken\\EindOpdracht C#\\EindOpdracht Csharp\\Client\\Client\\Client.csproj",
+      "projectUniqueName": "C:\\Users\\rikva\\Documents\\GitKraken codes\\EindOpdracht-C-\\EindOpdracht Csharp\\Client\\Client\\Client.csproj",
       "projectName": "Client",
-      "projectPath": "C:\\Users\\luukb\\OneDrive\\Documenten\\school\\gitKraken\\EindOpdracht C#\\EindOpdracht Csharp\\Client\\Client\\Client.csproj",
-      "packagesPath": "C:\\Users\\luukb\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\luukb\\OneDrive\\Documenten\\school\\gitKraken\\EindOpdracht C#\\EindOpdracht Csharp\\Client\\Client\\obj\\",
+      "projectPath": "C:\\Users\\rikva\\Documents\\GitKraken codes\\EindOpdracht-C-\\EindOpdracht Csharp\\Client\\Client\\Client.csproj",
+      "packagesPath": "C:\\Users\\rikva\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\rikva\\Documents\\GitKraken codes\\EindOpdracht-C-\\EindOpdracht Csharp\\Client\\Client\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\luukb\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\rikva\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net8.0-windows"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net8.0-windows7.0": {
           "targetAlias": "net8.0-windows",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\rikva\\Documents\\GitKraken codes\\EindOpdracht-C-\\EindOpdracht Csharp\\UtilityLibrary\\UtilityLibrary.csproj": {
+              "projectPath": "C:\\Users\\rikva\\Documents\\GitKraken codes\\EindOpdracht-C-\\EindOpdracht Csharp\\UtilityLibrary\\UtilityLibrary.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
@@ -67,7 +98,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Users\\luukb\\.dotnet\\sdk\\8.0.401/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.403/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
