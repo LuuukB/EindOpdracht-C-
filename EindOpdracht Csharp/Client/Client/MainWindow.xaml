@@ -7,6 +7,34 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
+        <TabControl HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <!-- Tabblad voor bestanden downloaden -->
+            <TabItem Header="Bestanden Lijst">
+                <Grid>
+                    <ListView x:Name="FileList" HorizontalAlignment="Left" Height="200" VerticalAlignment="Top" Width="500" Margin="10,10,0,0">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Bestandsnaam" DisplayMemberBinding="{Binding FileName}" Width="300"/>
+                                <GridViewColumn Header="Grootte (KB)" DisplayMemberBinding="{Binding FileSize}" Width="100"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
 
+                    <Button x:Name="RefreshButton" Content="Verversen" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Margin="10,220,0,0" Click="RefreshButtonClicked"/>
+                    <Button x:Name="DownloadButton" Content="Downloaden" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Margin="120,220,0,0" Click="DownloadButtonClicked"/>
+                </Grid>
+            </TabItem>
+
+            <!-- Tabblad voor bestanden uploaden -->
+            <TabItem Header="Bestanden Upload">
+                <Grid>
+                    <Label Content="Selecteer een bestand om te uploaden:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0"/>
+                    <Button x:Name="ChooseButton" Content="Bestand kiezen" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" Margin="10,40,0,0" Click="ChosenButtonClicked"/>
+                    <Label Content="geef uw bestand een naam:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,60,0,0"></Label>
+                    <TextBox x:Name="FileName" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,90,0,0" Width="150"></TextBox>
+                    <Button x:Name="UploadButton" Content="Upload" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" Margin="10,150,50,50" Click="UploadButtonClicked"></Button>
+                </Grid>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>
