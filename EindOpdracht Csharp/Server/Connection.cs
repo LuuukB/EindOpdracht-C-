@@ -98,13 +98,16 @@ public class Connection
 				string[] files = Directory.GetFiles(filesDirectory);
 				for (int i = 0; i < files.Length; i++)
 				{
+					string filePath = files[i];
+					string[] pathSplit = filePath.Split('\\');
+					string fileName = pathSplit[pathSplit.Length - 1];
 					if (i == files.Length - 1)
 					{
-						builder.Append(files[i]);
+						builder.Append(fileName);
 					}
 					else
 					{
-						builder.Append(files[i]).Append(',');
+						builder.Append(fileName).Append(',');
 					}
 				}
 				SendData(builder.ToString());

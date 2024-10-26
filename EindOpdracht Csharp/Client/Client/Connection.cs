@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Windows.Threading;
 using Microsoft.Win32;
 
 namespace Client;
@@ -20,7 +21,7 @@ public class Connection
         try
         {
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            socket.Connect(IPAddress.Parse("127.0.0.1"), 8888);
+            socket.Connect(IPAddress.Parse("127.0.0.1"), 666);
         }
         catch (Exception e)
         {
@@ -41,6 +42,9 @@ public class Connection
             while (true)
             {
                 string message = reader.ReadLine();
+                if (message == null)
+                    continue;
+                
                 Console.WriteLine(reader.ReadLine());
                 if (Downlaoding)
                 {
@@ -66,9 +70,18 @@ public class Connection
                 } else if (message == "{Upload Start}")
                 {
                     Downlaoding = true;
-                } else if (message.StartsWith("{FILES}"))
+                } else if (message.StartsWith("{FILES}:"))
                 {
-                    
+                    try
+                    {
+                        string fileNames = message.Split(':')[1];
+                        string[] fileNameArray = fileNames.Split(',');
+                        App.AddAvailableFileName(fileNameArray);
+                    }
+                    catch (IndexOutOfRangeException e)
+                    {
+                        //todo vang af dat er geen files beschikbaar zijn
+                    }
                 }
             }
         }
@@ -88,9 +101,9 @@ public class Connection
     public void SendFile(string fileRoute, string fileName)
     {
         Send("{UPLOAD START}");
-        Send(fileName.Length + fileName);
+        Send(fileName);
         socket.SendFile(fileRoute);
-        Send("{UPLOAD DONE}");
+        Send("\n{UPLOAD DONE}");
     }
 
     public void Disconnect()

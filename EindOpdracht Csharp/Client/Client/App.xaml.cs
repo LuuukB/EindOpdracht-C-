@@ -16,7 +16,7 @@ public partial class App : Application
         base.OnStartup(e);
 
         // Voer initiële logica uit bij het starten van de applicatie
-        // connection = new Connection();
+        connection = new Connection();
         MainWindow mainWindow = new MainWindow();
         mainWindow.Show();
     }
@@ -50,8 +50,13 @@ public partial class App : Application
         connection.Send("{REFRESH}");
     }
 
-    public static List<string> getAvailableFileNames()
+    public static List<string> GetAvailableFileNames()
     {
         return availablefileNames;
+    }
+
+    public static void AddAvailableFileName(string[] fileName)
+    {
+        availablefileNames.AddRange(fileName);
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.ComponentModel;
+using System.IO;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -78,7 +79,7 @@ public partial class MainWindow : Window
     {
         FileList.Items.Clear();
         App.Refresh();
-        fileList = App.getAvailableFileNames();
+        fileList = App.GetAvailableFileNames();
         fileList.ForEach(var => FileList.Items.Add(var));
     }
 }
