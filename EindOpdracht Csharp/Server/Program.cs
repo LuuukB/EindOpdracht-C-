@@ -12,20 +12,20 @@ public class Program
 	{
 		try
 		{
-			
+			TcpListener listener = new TcpListener(IPAddress.Loopback, 666);
+			listener.Start();
+			while (true)
+			{
+				Socket client = listener.AcceptSocket();
+				connections.Add(new Connection(client));
+			}
 		}
 		catch (Exception e)
 		{
-			
+			Console.WriteLine($"Server crashed with error\n{e}");
 		}
 		
-		TcpListener listener = new TcpListener(IPAddress.Loopback, 666);
-		listener.Start();
-		while (true)
-		{
-			Socket client = listener.AcceptSocket();
-			connections.Add(new Connection(client));
-		}
+
 	}
 
 	public static void RemoveConnections(Connection connection)
