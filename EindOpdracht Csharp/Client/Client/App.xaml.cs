@@ -1,6 +1,4 @@
-﻿using System.Configuration;
-using System.Data;
-using System.Windows;
+﻿using System.Windows;
 
 namespace Client;
 
@@ -17,7 +15,7 @@ public partial class App : Application
 
         // Voer initiële logica uit bij het starten van de applicatie
         connection = new Connection();
-        MainWindow mainWindow = new MainWindow();
+        MainWindow mainWindow = new MainWindow(connection);
         mainWindow.Show();
     }
     
@@ -31,17 +29,17 @@ public partial class App : Application
         }
     }
 
-    public static void SendFile(string fileRoute, string fileName)
+    public static async Task SendFile(string fileRoute, string fileName)
     {
         if (connection != null)
         {
-            connection.SendFile(fileRoute, fileName);
+            await connection.SendFile(fileRoute, fileName);
         }
     }
 
     public static void Download(string fileName)
     {
-        connection.Send("{UPLOAD} " + fileName);
+        connection.Send("{DOWNLOAD} " + fileName);
     }
 
     public static void Refresh()
@@ -50,12 +48,7 @@ public partial class App : Application
         connection.Send("{REFRESH}");
     }
 
-    public static List<string> GetAvailableFileNames()
-    {
-        return availablefileNames;
-    }
-
-    public static void AddAvailableFileName(string[] fileName)
+    public static void AddAvailableFileNames(string[] fileName)
     {
         availablefileNames.AddRange(fileName);
     }

@@ -1,15 +1,5 @@
-﻿using System.ComponentModel;
-using System.IO;
-using System.Text;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Microsoft.Win32;
 
 namespace Client;
@@ -17,18 +7,23 @@ namespace Client;
 /// <summary>
 /// Interaction logic for MainWindow.xaml
 /// </summary>
-public partial class MainWindow : Window
+public partial class MainWindow : Window, IUpdateFileList
 {
     private string fileRoute = "'";
     private string fileName = "";
-    private List<string> fileList;
-    public MainWindow()
+    private ObservableCollection<File> fileList;
+    private Connection connection;
+    public MainWindow(Connection connection)
     {
         InitializeComponent();
+        connection.UpdateFileList = this;
+        this.connection = connection;
+        fileList = new ObservableCollection<File>();
+        FileList.ItemsSource = fileList;
         Refresh();
-
     }
 
+    #region ButtonEvends
     private void RefreshButtonClicked(object sender, RoutedEventArgs e)
     {
         Refresh();
@@ -36,9 +31,9 @@ public partial class MainWindow : Window
 
     private void DownloadButtonClicked(object sender, RoutedEventArgs e)
     {
-        if (FileList.SelectedItem is string selectedItem)
+        if (FileList.SelectedItem is File selectedItem)
         {
-            App.Download(selectedItem);
+            App.Download(selectedItem.fileName);
         }
         else
         {
@@ -55,6 +50,7 @@ public partial class MainWindow : Window
         if (openFileDialog.ShowDialog() == true)
         {
             fileRoute = openFileDialog.FileName;
+            ChosenFileName.Content = System.IO.Path.GetFileName(fileRoute);
             Console.WriteLine(fileRoute);
         }
     }
@@ -65,7 +61,7 @@ public partial class MainWindow : Window
         if (fileRoute.Length > 1 && fileName.Length > 1)
         {
             Console.WriteLine("File with Route: " + fileRoute + " is send with name: " + fileName);
-            App.SendFile(fileRoute, fileName);
+            App.SendFile(fileRoute, fileName + ".txt");
         }
         else
         {
@@ -74,12 +70,23 @@ public partial class MainWindow : Window
         FileName.Clear();
        
     }
+    #endregion
 
     private void Refresh()
     {
-        FileList.Items.Clear();
+        fileList.Clear();
         App.Refresh();
-        fileList = App.GetAvailableFileNames();
-        fileList.ForEach(var => FileList.Items.Add(var));
+    }
+    
+    public void AddFile(File file)
+    {
+        Dispatcher.Invoke(() =>
+        {
+            if (fileList.Contains(file))
+            {
+                return;
+            }
+            fileList.Add(file);
+        });
     }
 }

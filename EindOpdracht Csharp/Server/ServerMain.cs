@@ -5,11 +5,18 @@ using UtilityLibrary;
 
 namespace server;
 
-public class Program
+public class ServerMain
 {
+	public static string FilesDirectory { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "CServerSaves");
 	private static List<Connection> connections = new List<Connection>();
+	
+	/**
+	 * Method that keeps accepting sockets and gives them their own thread
+	 * Checks if the directory for uploaded files exists first, if not it will create it.
+	 */
 	public static void Main(string[] args)
 	{
+		EnsureDirectoryExists(ServerMain.FilesDirectory);
 		try
 		{
 			TcpListener listener = new TcpListener(IPAddress.Loopback, 666);
@@ -26,6 +33,14 @@ public class Program
 		}
 		
 
+	}
+	
+	/**
+	 * Creates the save directory would it not exist.
+	 */
+	private static void EnsureDirectoryExists(string path)
+	{
+		Directory.CreateDirectory(path);
 	}
 
 	public static void RemoveConnections(Connection connection)

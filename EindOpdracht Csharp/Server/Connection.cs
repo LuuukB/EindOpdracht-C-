@@ -6,17 +6,16 @@ namespace server;
 
 public class Connection
 {
-	private readonly string filesDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "CServerSaves");
 	private Socket socket;
-	private StringBuilder stringBuilder;
-	private StreamWriter writer;
+	private StreamWriter socketWriter;
+	private StreamWriter fileWriter;
 	private TextReader reader;
-	
+
 	public Connection(Socket clientSocket)
 	{
 		socket = clientSocket;
 		NetworkStream stream = new NetworkStream(clientSocket);
-		writer = new StreamWriter(stream);
+		socketWriter = new StreamWriter(stream);
 		reader = new StreamReader(new BufferedStream(stream));
 		new Thread(HandleReceivedData).Start();
 	}
@@ -33,105 +32,136 @@ public class Connection
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine($"Reading failed with exception \n{e}");
+				Console.WriteLine($"Reading failed with exception ");
 				return;
 			}
 			finally
 			{
-				Program.RemoveConnections(this);
+				ServerMain.RemoveConnections(this);
 			}
-			
+
 		}
 	}
-	
+
 	private bool isUploading = false;
-	
-	private void HandleLine(string? line)
+
+	private async Task HandleLine(string? line)
 	{
 		if (line == null) return;
-		Console.WriteLine($"Server read line: {line}");
-		
+		// Console.WriteLine($"Server read line: {line}");
+
 		if (isUploading)
 		{
-			switch (line)
-			{
-				case "{UPLOAD START}":
-					stringBuilder = new StringBuilder();
-					break;
-				case "{UPLOAD DONE}":
-					string totalContent = stringBuilder.ToString();
-					int fileNameLength = totalContent.IndexOf('\n');
-
-					//filter out the \n from index of
-					string fileName = totalContent.Substring(0, fileNameLength - 1);
-					string filePath = Path.Combine(filesDirectory, fileName);
-
-					//filter out the \n from index of
-					string content = totalContent.Substring(fileNameLength + 1);
-
-					//test print for console
-					Console.WriteLine($"got file name: {fileName}\n" +
-					                  $"at: {filePath}\n" +
-					                  $"with content: \n\t{content}");
-
-					Utils.CreateNewFile(filePath, content);
-					isUploading = false;
-					break;
-				default:
-					stringBuilder.AppendLine(line);
-					break;
-			}
+			await HandleUpload(line);
 		}
 		else
 		{
-			if (line.StartsWith("{UPLOAD START}"))
-			{
-				stringBuilder = new StringBuilder();
-				isUploading = true;
-			} else if (line.StartsWith("{DOWNLOAD}"))
-			{
-				string fileToSend = line.Split(' ')[1];
-				SendFile(fileToSend);
-			} else if (line.StartsWith("{REFRESH}"))
-			{
-				StringBuilder builder = new StringBuilder("{FILES}:");
-				string[] files = Directory.GetFiles(filesDirectory);
-				for (int i = 0; i < files.Length; i++)
-				{
-					string filePath = files[i];
-					string[] pathSplit = filePath.Split('\\');
-					string fileName = pathSplit[pathSplit.Length - 1];
-					if (i == files.Length - 1)
-					{
-						builder.Append(fileName);
-					}
-					else
-					{
-						builder.Append(fileName).Append(',');
-					}
-				}
-				SendData(builder.ToString());
-			}
+			await HandleCommand(line);
 		}
-
 	}
+	
+	#region HandleLineMethods
+	private async Task HandleUpload(string line)
+	{
+		switch (line)
+		{
+			case "{UPLOAD DONE}":
+				fileWriter.Close();
+				fileWriter = null;
+				isUploading = false;
+				break;
+			default:
+				// stringBuilder.AppendLine(line);
+				await Utils.WriteToFile(fileWriter, line, true);
+				break;
+		}
+	}
+	
+	private async Task HandleCommand(string line)
+	{
 
+		if (line.StartsWith("{UPLOAD START}"))
+		{
+			HandleStartUpload(line);
+		}
+		else if (line.StartsWith("{DOWNLOAD}"))
+		{
+			string fileToSend = line.Split(' ')[1];
+			await SendFile(fileToSend);
+		}
+		else if (line.StartsWith("{REFRESH}"))
+		{
+			HandleRefresh();
+		}
+	}
+	#endregion
+
+	#region HandleCommandMethods
+		private void HandleStartUpload(string line)
+    	{
+    
+    		try
+    		{
+    			string fileName = line.Split(" ")[2];
+    			string path = Path.Combine(ServerMain.FilesDirectory, fileName);
+    			Utils.CreateNewEmptyFile(path);
+    			fileWriter = new StreamWriter(path);
+    			isUploading = true;
+    		}
+    		catch (IndexOutOfRangeException e)
+    		{
+    			Console.WriteLine($"No name provided because OutOfRangeException\n{e}");
+    		}
+    	}
+    	
+    	private void HandleRefresh()
+    	{
+    
+    		StringBuilder builder = new StringBuilder("{FILES}:");
+    		DirectoryInfo directoryInfo = new DirectoryInfo(ServerMain.FilesDirectory);
+    		FileInfo[] files = directoryInfo.GetFiles();
+    
+    		for (int i = 0; i < files.Length; i++)
+    		{
+    			FileInfo fileInfo = files[i];
+    
+    			//put the name and size together to send (FileName.txt;10.0KB - example)
+    			string fileName = fileInfo.Name;
+    			string fileSize = Utils.FormatDataSize(fileInfo.Length);
+    			string fileNameAndSize = $"{fileName};{fileSize}";
+    
+    			if (i == files.Length - 1)
+    			{
+    				builder.Append(fileNameAndSize);
+    			}
+    			else
+    			{
+    				builder.Append(fileNameAndSize).Append(',');
+    			}
+    		}
+    		SendData(builder.ToString());
+    	}
+	#endregion
+
+	#region SendMethods
 	private void SendData(string data)
 	{
-		writer.WriteLine(data);
-		writer.Flush();
+		Utils.SendData(socketWriter, data);
 	}
 
-	private void SendFile(string filename)
+	private async Task SendFile(string filename)
 	{
 		try
 		{
-			socket.SendFile(Path.Combine(filesDirectory, filename));
+			SendData("{UPLOAD START}");
+			await socket.SendFileAsync(Path.Combine(ServerMain.FilesDirectory, filename));
+			SendData("\n{UPLOAD DONE}");
 		}
 		catch (Exception e)
 		{
 			Console.WriteLine($"Sending failed with exception \n{e}");
 		}
 	}
-	
+	#endregion
+
 }

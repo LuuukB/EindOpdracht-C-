@@ -1,19 +1,19 @@
 ﻿using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using System.Text;
-using System.Windows.Threading;
 using Microsoft.Win32;
+using UtilityLibrary;
 
 namespace Client;
 
 public class Connection
 {
     private Socket socket;
-    private StreamWriter writer;
+    private StreamWriter socketWriter;
     private StreamReader reader;
-    private bool Downlaoding = false;
-    private StringBuilder StringBuilder;
+    private bool downloading = false;
+    private StreamWriter streamWriter;
+    public IUpdateFileList UpdateFileList { get; set; }
     
     public Connection()
     {
@@ -28,13 +28,13 @@ public class Connection
             Console.WriteLine("can't connect to server");
             throw;
         }
-        writer = new StreamWriter(new NetworkStream(socket));
+        socketWriter = new StreamWriter(new NetworkStream(socket));
         reader = new StreamReader(new BufferedStream( new NetworkStream(socket)));
         
         new Thread(HandleMessage).Start();
     }
 
-    private void HandleMessage()
+    private async void HandleMessage()
     {
         Console.WriteLine("verbonden!");
         try
@@ -45,38 +45,45 @@ public class Connection
                 if (message == null)
                     continue;
                 
-                Console.WriteLine(reader.ReadLine());
-                if (Downlaoding)
+                // Console.WriteLine(message);
+                if (downloading)
                 {
                     switch (message)
                     {
-                        case "{Download Stop}":
-                            Downlaoding = false;
-                            string downlaodstring = StringBuilder.ToString();
-                            SaveFileDialog saveFileDialog = new SaveFileDialog();
-                            saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                            saveFileDialog.Title = "were do u want to save the file";
-                            if (saveFileDialog.ShowDialog() == true)
-                            {
-                                string selectedFilePath = saveFileDialog.FileName;
-                                
-                                File.WriteAllText(selectedFilePath, downlaodstring);
-                            }
+                        case "{UPLOAD DONE}":
+                            downloading = false;
+                            streamWriter.Close();
+                            streamWriter = null;
                             break;
                         default:
-                            StringBuilder.AppendLine(message);
+                            await Utils.WriteToFile(streamWriter, message, true);
                             break;
                     }
-                } else if (message == "{Upload Start}")
+                } else if (message == "{UPLOAD START}")
                 {
-                    Downlaoding = true;
+                    SaveFileDialog saveFileDialog = new SaveFileDialog();
+                    saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                    saveFileDialog.Title = "Where do u want to save the file?";
+                    if (saveFileDialog.ShowDialog() == true)
+                    {
+                        string selectedFilePath = saveFileDialog.FileName;
+                        FileStream fileStream = new FileStream(selectedFilePath, FileMode.Create, FileAccess.Write);
+                        streamWriter = new StreamWriter(fileStream);
+                        downloading = true;
+                    }
+                    
                 } else if (message.StartsWith("{FILES}:"))
                 {
                     try
                     {
                         string fileNames = message.Split(':')[1];
                         string[] fileNameArray = fileNames.Split(',');
-                        App.AddAvailableFileName(fileNameArray);
+                        App.AddAvailableFileNames(fileNameArray);
+                        foreach (string file in fileNameArray)
+                        {
+                            string[] fileInfo = file.Split(';');
+                            UpdateFileList.AddFile(new File(fileInfo[0], fileInfo[1]));
+                        }
                     }
                     catch (IndexOutOfRangeException e)
                     {
@@ -94,15 +101,13 @@ public class Connection
 
     public void Send(string message)
     {
-        writer.WriteLine(message);
-        writer.Flush();
+        Utils.SendData(socketWriter, message);
     }
-
-    public void SendFile(string fileRoute, string fileName)
+    
+    public async Task SendFile(string fileRoute, string fileName)
     {
-        Send("{UPLOAD START}");
-        Send(fileName);
-        socket.SendFile(fileRoute);
+        Send("{UPLOAD START} " + fileName);
+        await socket.SendFileAsync(fileRoute);
         Send("\n{UPLOAD DONE}");
     }
 
