@@ -15,6 +15,7 @@ public class Connection
     private bool downloading = false;
     private int totalBytesOfSingleFile = 0;
     private StreamWriter fileWriter;
+    public string SelectedFilePath { get; set; }
     public IUpdateFileList UpdateFileList { get; set; }
     public IUpdateProgressBar UpdateProgressBar { get; set; }
     
@@ -48,13 +49,15 @@ public class Connection
                 if (message == null)
                     continue;
                 
-                // Console.WriteLine(message);
+                Console.WriteLine(message);
                 if (downloading)
                 {
                     switch (message)
                     {
                         case "{UPLOAD DONE}":
+                            //reset everything to empty or null when uploading is done
                             UpdateProgressBar.ReportFileDone();
+                            SelectedFilePath = "";
                             totalBytesOfSingleFile = 0;
                             downloading = false;
                             fileWriter.Close();
@@ -68,19 +71,10 @@ public class Connection
                     }
                 } else if (message == "{UPLOAD START}")
                 {
-                    SaveFileDialog saveFileDialog = new SaveFileDialog();
-                    saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                    //for now txt forced save as we only work with those files.
-                    saveFileDialog.Filter = "Text files (*.txt)|*.txt";
-                    saveFileDialog.Title = "Where do u want to save the file?";
-                    if (saveFileDialog.ShowDialog() == true)
-                    {
-                        string selectedFilePath = saveFileDialog.FileName;
-                        FileStream fileStream = new FileStream(selectedFilePath, FileMode.Create, FileAccess.Write);
-                        fileWriter = new StreamWriter(fileStream);
-                        downloading = true;
-                        totalBytesOfSingleFile = 0;
-                    }
+                    FileStream fileStream = new FileStream(SelectedFilePath, FileMode.Create, FileAccess.Write);
+                    fileWriter = new StreamWriter(fileStream);
+                    downloading = true;
+                    totalBytesOfSingleFile = 0;
                     
                 } else if (message.StartsWith("{FILES}:"))
                 {

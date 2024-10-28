@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
@@ -39,15 +40,26 @@ public partial class MainWindow : Window, IUpdateFileList, IUpdateProgressBar
 
     private void DownloadButtonClicked(object sender, RoutedEventArgs e)
     {
-        if (FileList.SelectedItem is File selectedItem)
+        
+        SaveFileDialog saveFileDialog = new SaveFileDialog();
+        saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+        saveFileDialog.Filter = "Text files (*.txt)|*.txt";
+        saveFileDialog.Title = "Where do u want to save the file?";
+        if (saveFileDialog.ShowDialog() == true)
         {
-            ResetProgressBar();
-            selectedFileSizeInBytes = Utils.FormatDataSizeToBytes(selectedItem.fileSize);
-            App.Download(selectedItem.fileName);
-        }
-        else
-        {
-            MessageBox.Show("selected file dit not go trough");
+            string selectedFilePath = saveFileDialog.FileName;
+            connection.SelectedFilePath = selectedFilePath;
+            
+            if (FileList.SelectedItem is File selectedItem)
+            {
+                ResetProgressBar();
+                selectedFileSizeInBytes = Utils.FormatDataSizeToBytes(selectedItem.fileSize);
+                App.Download(selectedItem.fileName);
+            }
+            else
+            {
+                MessageBox.Show("selected file dit not go trough");
+            }
         }
     }
 

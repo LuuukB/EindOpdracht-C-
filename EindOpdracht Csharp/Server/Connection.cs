@@ -48,7 +48,7 @@ public class Connection
 	private async Task HandleLine(string? line)
 	{
 		if (line == null) return;
-		// Console.WriteLine($"Server read line: {line}");
+		Console.WriteLine($"Server read line: {line}");
 
 		if (isUploading)
 		{
