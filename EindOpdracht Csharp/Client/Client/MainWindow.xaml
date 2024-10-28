@@ -19,11 +19,12 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*"></ColumnDefinition>
                         <ColumnDefinition Width="1*"></ColumnDefinition>
-                        <ColumnDefinition Width="5*"></ColumnDefinition>
+                        <ColumnDefinition Width="1*"></ColumnDefinition>
+                        <ColumnDefinition Width="4*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
                     
                     
-                    <ListView Name="FileList" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Left" Height="200" VerticalAlignment="Top" Width="500" Margin="10,10,0,0">
+                    <ListView Name="FileList" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="4" HorizontalAlignment="Left" Height="200" VerticalAlignment="Top" Width="500" Margin="10,10,0,0">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="Bestandsnaam" DisplayMemberBinding="{Binding fileName}" Width="300"/>
@@ -34,8 +35,9 @@
 
                     <Button Name="RefreshButton" Grid.Row="1" Grid.Column="0" Content="Verversen" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Margin="10,10,0,0" Click="RefreshButtonClicked"/>
                     <Button Name="DownloadButton" Grid.Row="1" Grid.Column="1" Content="Downloaden" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Margin="10,10,0,0" Click="DownloadButtonClicked"/>
-                    <ProgressBar Minimum="0" Maximum="100" Value="0" Name="DownloadProgressBar" Width="100" Height="15" Margin="0,35,0,0"/>
-                    <TextBlock Text="{Binding ElementName=DownloadProgressBar, Path=Value, StringFormat={}{0:0}%}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    <ProgressBar Grid.Row="1" Grid.Column="2" Minimum="0" Maximum="100" Value="0" Name="DownloadProgressBar" Width="100" Height="15" Margin="10,10,0,0"/>
+                    <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding ElementName=DownloadProgressBar, Path=Value, StringFormat={}{0:0}%}" HorizontalAlignment="Center" VerticalAlignment="Center"
+                               Margin="10,10,0,0"/>
                 </Grid>
             </TabItem>
 
