@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\luukb\\OneDrive\\Documenten\\school\\gitKraken\\EindOpdracht C#\\EindOpdracht Csharp\\Client\\Client.csproj",
+      "projectUniqueName": "C:\\Users\\luukb\\RiderProjects\\EindOpdrachtCSharp\\EindOpdracht Csharp\\Client\\Client.csproj",
       "projectName": "Client",
-      "projectPath": "C:\\Users\\luukb\\OneDrive\\Documenten\\school\\gitKraken\\EindOpdracht C#\\EindOpdracht Csharp\\Client\\Client.csproj",
+      "projectPath": "C:\\Users\\luukb\\RiderProjects\\EindOpdrachtCSharp\\EindOpdracht Csharp\\Client\\Client.csproj",
       "packagesPath": "C:\\Users\\luukb\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\luukb\\OneDrive\\Documenten\\school\\gitKraken\\EindOpdracht C#\\EindOpdracht Csharp\\Client\\obj\\",
+      "outputPath": "C:\\Users\\luukb\\RiderProjects\\EindOpdrachtCSharp\\EindOpdracht Csharp\\Client\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\luukb\\AppData\\Roaming\\NuGet\\NuGet.Config"

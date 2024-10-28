@@ -11,7 +11,19 @@
             <!-- Tabblad voor bestanden downloaden -->
             <TabItem Header="Bestanden Lijst">
                 <Grid>
-                    <ListView Name="FileList" HorizontalAlignment="Left" Height="200" VerticalAlignment="Top" Width="500" Margin="10,10,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"></ColumnDefinition>
+                        <ColumnDefinition Width="1*"></ColumnDefinition>
+                        <ColumnDefinition Width="5*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    
+                    
+                    <ListView Name="FileList" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Left" Height="200" VerticalAlignment="Top" Width="500" Margin="10,10,0,0">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="Bestandsnaam" DisplayMemberBinding="{Binding fileName}" Width="300"/>
@@ -20,20 +32,36 @@
                         </ListView.View>
                     </ListView>
 
-                    <Button Name="RefreshButton" Content="Verversen" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Margin="10,220,0,0" Click="RefreshButtonClicked"/>
-                    <Button Name="DownloadButton" Content="Downloaden" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Margin="120,220,0,0" Click="DownloadButtonClicked"/>
+                    <Button Name="RefreshButton" Grid.Row="1" Grid.Column="0" Content="Verversen" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Margin="10,10,0,0" Click="RefreshButtonClicked"/>
+                    <Button Name="DownloadButton" Grid.Row="1" Grid.Column="1" Content="Downloaden" HorizontalAlignment="Left" VerticalAlignment="Top" Width="100" Margin="10,10,0,0" Click="DownloadButtonClicked"/>
                 </Grid>
             </TabItem>
 
             <!-- Tabblad voor bestanden uploaden -->
             <TabItem Header="Bestanden Upload">
                 <Grid>
-                    <Label Content="Selecteer een bestand om te uploaden:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0"/>
-                    <Button Name="ChooseButton" Content="Bestand kiezen" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" Margin="10,40,0,0" Click="ChosenButtonClicked"/>
-                    <Label Name="ChosenFileName" HorizontalAlignment="left" VerticalAlignment="Top" Width="150" Margin="180,40,0,0"></Label>
-                    <Label Content="geef uw bestand een naam:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,60,0,0"></Label>
-                    <TextBox Name="FileName" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,90,0,0" Width="150"></TextBox>
-                    <Button Name="UploadButton" Content="Upload" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" Margin="10,150,50,50" Click="UploadButtonClicked"></Button>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"></RowDefinition>
+                        <RowDefinition Height="1*"></RowDefinition>
+                        <RowDefinition Height="1*"></RowDefinition>
+                        <RowDefinition Height="1*"></RowDefinition>
+                        <RowDefinition Height="1*"></RowDefinition>
+                        <RowDefinition Height="5*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    
+                    
+                    <Label Content="Selecteer een bestand om te uploaden:" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0"/>
+                    <Button Name="ChooseButton" Content="Bestand kiezen" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" Margin="10,10,0,0" Click="ChosenButtonClicked"/>
+                    <Label Name="ChosenFileName" Content="" Grid.Row="1" Grid.Column="1" HorizontalAlignment="left" VerticalAlignment="Top" Width="150" Margin="0,5,0,0"></Label>
+                    <Label Content="geef uw bestand een naam:" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,0,0,0"></Label>
+                    <TextBox Name="FileName" Grid.Row="3" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,0,0,0" Width="150"></TextBox>
+                    <Label Content=".txt" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-7,-2,0,0"></Label>
+                    <Button Name="UploadButton" Content="Upload" Grid.Row="5" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="150" Margin="10,0,0,0" Click="UploadButtonClicked"></Button>
                 </Grid>
             </TabItem>
         </TabControl>

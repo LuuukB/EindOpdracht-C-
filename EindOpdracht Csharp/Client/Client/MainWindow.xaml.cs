@@ -13,11 +13,13 @@ public partial class MainWindow : Window, IUpdateFileList
     private string fileName = "";
     private ObservableCollection<File> fileList;
     private Connection connection;
-    public MainWindow(Connection connection)
+    private readonly Action<string, string>? sendFileAction;
+    public MainWindow(Connection connection, Action<string, string>? sendFileAction = null)
     {
         InitializeComponent();
         connection.UpdateFileList = this;
         this.connection = connection;
+        this.sendFileAction = sendFileAction ?? ((filePath, fileName) => App.SendFile(filePath, fileName));
         fileList = new ObservableCollection<File>();
         FileList.ItemsSource = fileList;
         Refresh();
@@ -61,7 +63,8 @@ public partial class MainWindow : Window, IUpdateFileList
         if (fileRoute.Length > 1 && fileName.Length > 1)
         {
             Console.WriteLine("File with Route: " + fileRoute + " is send with name: " + fileName);
-            App.SendFile(fileRoute, fileName + ".txt");
+            // App.SendFile(fileRoute, fileName + ".txt");
+            sendFileAction?.Invoke(fileRoute, fileName + ".txt");
         }
         else
         {

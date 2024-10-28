@@ -1,4 +1,8 @@
-﻿namespace UnitTest;
+﻿using Server;
+
+
+
+namespace UnitTest;
 
 public class TestClientButtons
 {
