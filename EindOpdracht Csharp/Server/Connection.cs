@@ -16,7 +16,7 @@ public class Connection
 		socket = clientSocket;
 		NetworkStream stream = new NetworkStream(clientSocket);
 		socketWriter = new StreamWriter(stream);
-		reader = new StreamReader(new BufferedStream(stream));
+		reader = new StreamReader(stream);
 		new Thread(HandleReceivedData).Start();
 	}
 
@@ -127,7 +127,7 @@ public class Connection
     
     			//put the name and size together to send (FileName.txt;10.0KB - example)
     			string fileName = fileInfo.Name;
-    			string fileSize = Utils.FormatDataSize(fileInfo.Length);
+    			string fileSize = Utils.FormatDataSizeFromBytes(fileInfo.Length);
     			string fileNameAndSize = $"{fileName};{fileSize}";
     
     			if (i == files.Length - 1)

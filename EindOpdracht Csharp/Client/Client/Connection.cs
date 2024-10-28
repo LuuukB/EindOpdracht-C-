@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 using Microsoft.Win32;
 using UtilityLibrary;
 
@@ -12,8 +13,10 @@ public class Connection
     private StreamWriter socketWriter;
     private StreamReader reader;
     private bool downloading = false;
-    private StreamWriter streamWriter;
+    private int totalBytesOfSingleFile = 0;
+    private StreamWriter fileWriter;
     public IUpdateFileList UpdateFileList { get; set; }
+    public IUpdateProgressBar UpdateProgressBar { get; set; }
     
     public Connection()
     {
@@ -29,7 +32,7 @@ public class Connection
             throw;
         }
         socketWriter = new StreamWriter(new NetworkStream(socket));
-        reader = new StreamReader(new BufferedStream( new NetworkStream(socket)));
+        reader = new StreamReader(new NetworkStream(socket));
         
         new Thread(HandleMessage).Start();
     }
@@ -51,25 +54,32 @@ public class Connection
                     switch (message)
                     {
                         case "{UPLOAD DONE}":
+                            UpdateProgressBar.ReportFileDone();
+                            totalBytesOfSingleFile = 0;
                             downloading = false;
-                            streamWriter.Close();
-                            streamWriter = null;
+                            fileWriter.Close();
+                            fileWriter = null;
                             break;
                         default:
-                            await Utils.WriteToFile(streamWriter, message, true);
+                            await Utils.WriteToFile(fileWriter, message, true);
+                            totalBytesOfSingleFile += Encoding.UTF8.GetBytes(message).Length;
+                            UpdateProgressBar.UpdateProgress(totalBytesOfSingleFile);
                             break;
                     }
                 } else if (message == "{UPLOAD START}")
                 {
                     SaveFileDialog saveFileDialog = new SaveFileDialog();
                     saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                    //for now txt forced save as we only work with those files.
+                    saveFileDialog.Filter = "Text files (*.txt)|*.txt";
                     saveFileDialog.Title = "Where do u want to save the file?";
                     if (saveFileDialog.ShowDialog() == true)
                     {
                         string selectedFilePath = saveFileDialog.FileName;
                         FileStream fileStream = new FileStream(selectedFilePath, FileMode.Create, FileAccess.Write);
-                        streamWriter = new StreamWriter(fileStream);
+                        fileWriter = new StreamWriter(fileStream);
                         downloading = true;
+                        totalBytesOfSingleFile = 0;
                     }
                     
                 } else if (message.StartsWith("{FILES}:"))
