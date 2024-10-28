@@ -13,7 +13,7 @@ public class TestDataFormatMethod
 	public void TestAWrongByteAmount()
 	{
 		long bytes = -1;
-		string formattedData = Utils.FormatDataSize(bytes);
+		string formattedData = Utils.FormatDataSizeFromBytes(bytes);
 		Assert.That(formattedData, Is.EqualTo("Unable to parse data size"));
 	}
 	
@@ -21,7 +21,7 @@ public class TestDataFormatMethod
 	public void TestByteFormat()
 	{
 		long bytes = 500;
-		string formattedData = Utils.FormatDataSize(bytes);
+		string formattedData = Utils.FormatDataSizeFromBytes(bytes);
 		Assert.That(formattedData, Is.EqualTo("500 B"));
 	}
 
@@ -30,7 +30,7 @@ public class TestDataFormatMethod
 	{
 		//30 * 1000 = 30 KB
 		long bytes = 30 * 1000;
-		string formattedData = Utils.FormatDataSize(bytes);
+		string formattedData = Utils.FormatDataSizeFromBytes(bytes);
 		Assert.That(formattedData, Is.EqualTo("30 KB"));
 	}
 
@@ -39,7 +39,7 @@ public class TestDataFormatMethod
 	{
 		//30 * 1000 * 1000 = 30 MB
 		long bytes = 30 * 1000 * 1000;
-		string formattedData = Utils.FormatDataSize(bytes);
+		string formattedData = Utils.FormatDataSizeFromBytes(bytes);
 		Assert.That(formattedData, Is.EqualTo("30 MB"));
 	}
 
@@ -48,7 +48,7 @@ public class TestDataFormatMethod
 	{
 		//30 * 10^9 = 30 Gb (30 billion bytes)
 		long bytes = 30 * (long) Math.Pow(10, 9);
-		string formattedData = Utils.FormatDataSize(bytes);
+		string formattedData = Utils.FormatDataSizeFromBytes(bytes);
 		Assert.That(formattedData, Is.EqualTo("30 GB"));
 	}
 	

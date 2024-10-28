@@ -1,4 +1,5 @@
-﻿using Server.Enums;
+﻿using System.Security.AccessControl;
+using Server.Enums;
 
 namespace UtilityLibrary;
 
@@ -64,9 +65,9 @@ public class Utils
 	}
 	
 	/**
- * makes the unit from bytes to KB or MB when needed;
- */
-	public static string FormatDataSize(long amountOfBytes)
+	* makes the unit from bytes to KB or MB when needed;
+	*/
+	public static string FormatDataSizeFromBytes(long amountOfBytes)
 	{
 		long kbUnit = (long)DataSizeEnums.KB; //1.000 bytes
 		long mbUnit = (long)DataSizeEnums.MB; //1.000.000 bytes
@@ -90,5 +91,35 @@ public class Utils
 		
 		//anything bigger than MB just put GB
 		return $"{amountOfBytes / gbUnit} GB";
+	}
+
+	/**
+	 * returns the amount of bytes from a formatted text value
+	 * Does the opposite of the FormatDataSizeFromBytes
+	 */
+	public static int FormatDataSizeToBytes(string dataSizeFormatted)
+	{
+		string[] split = dataSizeFormatted.Split(' ');
+		int dataSize = int.Parse(split[0]);
+		
+		if (split.Length < 2)
+			return dataSize;
+		
+		
+		string unit = split[1];
+		
+		switch (unit)
+		{
+			case "B":
+				return dataSize;
+			case "KB":
+				return dataSize * (int) DataSizeEnums.KB;
+			case "MB":
+				return dataSize * (int) DataSizeEnums.MB;
+			case "GB":
+				return dataSize * (int) DataSizeEnums.GB;
+			default:
+				return dataSize;
+		}
 	}
 }

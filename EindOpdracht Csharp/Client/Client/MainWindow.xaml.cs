@@ -1,22 +1,28 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Threading;
 using Microsoft.Win32;
+using UtilityLibrary;
 
 namespace Client;
 
 /// <summary>
 /// Interaction logic for MainWindow.xaml
 /// </summary>
-public partial class MainWindow : Window, IUpdateFileList
+public partial class MainWindow : Window, IUpdateFileList, IUpdateProgressBar
 {
     private string fileRoute = "'";
     private string fileName = "";
     private ObservableCollection<File> fileList;
     private Connection connection;
+    private int selectedFileSizeInBytes;
+    
     public MainWindow(Connection connection)
     {
         InitializeComponent();
         connection.UpdateFileList = this;
+        connection.UpdateProgressBar = this;
         this.connection = connection;
         fileList = new ObservableCollection<File>();
         FileList.ItemsSource = fileList;
@@ -33,6 +39,8 @@ public partial class MainWindow : Window, IUpdateFileList
     {
         if (FileList.SelectedItem is File selectedItem)
         {
+            ResetProgressBar();
+            selectedFileSizeInBytes = Utils.FormatDataSizeToBytes(selectedItem.fileSize);
             App.Download(selectedItem.fileName);
         }
         else
@@ -88,5 +96,28 @@ public partial class MainWindow : Window, IUpdateFileList
             }
             fileList.Add(file);
         });
+    }
+    
+    public void UpdateProgress(int bytesDone)
+    {
+        // (Part / Whole) * 100 = a percentage
+        int percentage = (int) (bytesDone / (double) selectedFileSizeInBytes * 100);
+        Dispatcher.Invoke(() =>
+        {
+            DownloadProgressBar.Value = percentage;
+        });
+    }
+
+    public void ReportFileDone()
+    {
+        Dispatcher.Invoke(() =>
+        {
+            DownloadProgressBar.Value = 100;
+        });
+    }
+
+    private void ResetProgressBar()
+    {
+        DownloadProgressBar.Value = 0;
     }
 }
