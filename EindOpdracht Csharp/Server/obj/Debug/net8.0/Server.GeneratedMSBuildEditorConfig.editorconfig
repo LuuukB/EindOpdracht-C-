@@ -8,6 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = Server
-build_property.ProjectDir = C:\Users\luukb\OneDrive\Documenten\school\gitKraken\EindOpdracht C#\EindOpdracht Csharp\Server\
+build_property.ProjectDir = C:\Users\luukb\RiderProjects\EindOpdrachtCSharp\EindOpdracht Csharp\Server\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
